@@ -58,6 +58,27 @@ void League::calculateStandings() {
 }
 
 void League::printStandings() const {
+    auto copy = teams;
+    std::sort(copy.begin(), copy.end(), [](const Team& a, const Team& b){
+        if (a.points != b.points) return a.points > b.points;
+        int gdA = a.goalsScored - a.goalsAgainst;
+        int gdB = b.goalsScored - b.goalsAgainst;
+        if (gdA != gdB) return gdA > gdB;
+        if (a.goalsScored != b.goalsScored) return a.goalsScored > b.goalsScored;
+        return a.name < b.name;
+    });
 
+    std::cout << "Standings for league: " << name << "\n";
+    std::cout << "Pos | Team                 | Pts | GF | GA | GD\n";
+    std::cout << "-----------------------------------------------\n";
+    int pos = 1;
+    for (const auto &t : copy) {
+        int gd = t.goalsScored - t.goalsAgainst;
+        char buf[64];
+        snprintf(buf, sizeof(buf), "%3d | %-20s | %3d | %2d | %2d | %3d\n",
+                 pos, t.name.c_str(), t.points, t.goalsScored, t.goalsAgainst, gd);
+        std::cout << buf;
+        ++pos;
+    }
 }
 
