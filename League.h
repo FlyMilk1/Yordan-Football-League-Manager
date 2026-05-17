@@ -16,6 +16,8 @@ public:
 
     void addTeam(const Team& t);
     void addMatch(Match* m);
+    bool recordMatchResult(const std::string& home, const std::string& away, const std::string& date,
+                           int homeGoals, int awayGoals);
 
     void calculateStandings();
 
@@ -23,4 +25,3 @@ public:
 
     Team* findTeam(const std::string& name);
 };
-

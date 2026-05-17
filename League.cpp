@@ -6,7 +6,10 @@
 League::League(const std::string& name) : name(name) {}
 
 League::~League() {
-    delete[] matches.data();
+    for (Match* m : matches) {
+        delete m;
+    }
+    matches.clear();
 }
 
 void League::addTeam(const Team& t) {
@@ -15,6 +18,20 @@ void League::addTeam(const Team& t) {
 
 void League::addMatch(Match* m) {
     matches.push_back(m);
+}
+
+bool League::recordMatchResult(const std::string& home, const std::string& away, const std::string& date,
+                               int homeGoals, int awayGoals) {
+    for (size_t i = 0; i < matches.size(); ++i) {
+        Match* m = matches[i];
+        if (m->getHome() == home && m->getAway() == away && m->getDate() == date) {
+            if (dynamic_cast<PlayedMatch*>(m) != nullptr) return false;
+            delete m;
+            matches[i] = new PlayedMatch(home, away, date, homeGoals, awayGoals);
+            return true;
+        }
+    }
+    return false;
 }
 
 Team* League::findTeam(const std::string& tname) {
@@ -81,4 +98,3 @@ void League::printStandings() const {
         ++pos;
     }
 }
-
