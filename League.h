@@ -18,6 +18,8 @@ public:
     void addMatch(Match* m);
     bool recordMatchResult(const std::string& home, const std::string& away, const std::string& date,
                            int homeGoals, int awayGoals);
+    bool editMatchResult(const std::string& home, const std::string& away, const std::string& date,
+                         int homeGoals, int awayGoals);
     bool editTeamName(const std::string& oldName, const std::string& newName);
     bool removeTeam(const std::string& name);
 

@@ -69,6 +69,21 @@ bool League::editTeamName(const std::string& oldName, const std::string& newName
     return true;
 }
 
+bool League::editMatchResult(const std::string& home, const std::string& away, const std::string& date,
+                             int homeGoals, int awayGoals) {
+    for (size_t i = 0; i < matches.size(); ++i) {
+        Match* m = matches[i];
+        if (m->getHome() == home && m->getAway() == away && m->getDate() == date) {
+            if (dynamic_cast<PlayedMatch*>(m) == nullptr) return false;
+            delete m;
+            matches[i] = new PlayedMatch(home, away, date, homeGoals, awayGoals);
+            calculateStandings();
+            return true;
+        }
+    }
+    return false;
+}
+
 bool League::removeTeam(const std::string& name) {
     bool removed = false;
     for (size_t i = 0; i < teams.size(); ++i) {

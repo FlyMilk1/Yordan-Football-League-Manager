@@ -16,7 +16,7 @@ int main() {
 
     bool running = true;
     while (running) {
-        std::cout << "\n1) List matches\n2) Enter result\n3) Show standings\n4) Teams\n0) Exit\n> ";
+        std::cout << "\n1) List matches\n2) Enter result\n3) Edit result\n4) Show standings\n5) Teams\n0) Exit\n> ";
         int choice = -1;
         if (!(std::cin >> choice)) break;
 
@@ -50,11 +50,37 @@ int main() {
                 }
                 break;
             }
-            case 3:
+            case 3: {
+                std::string home;
+                std::string away;
+                std::string date;
+                int homeGoals = 0;
+                int awayGoals = 0;
+
+                std::cout << "Home team: ";
+                std::getline(std::cin >> std::ws, home);
+                std::cout << "Away team: ";
+                std::getline(std::cin >> std::ws, away);
+                std::cout << "Date (YYYY-MM-DD): ";
+                std::getline(std::cin >> std::ws, date);
+                std::cout << "New home goals: ";
+                std::cin >> homeGoals;
+                std::cout << "New away goals: ";
+                std::cin >> awayGoals;
+
+                bool edited = league.editMatchResult(home, away, date, homeGoals, awayGoals);
+                if (edited) {
+                    std::cout << "Result updated.\n";
+                } else {
+                    std::cout << "Played match not found.\n";
+                }
+                break;
+            }
+            case 4:
                 league.calculateStandings();
                 league.printStandings();
                 break;
-            case 4: {
+            case 5: {
                 bool teamMenu = true;
                 while (teamMenu) {
                     std::cout << "\n1) List teams\n2) Add team\n3) Edit team\n4) Remove team\n0) Back\n> ";
