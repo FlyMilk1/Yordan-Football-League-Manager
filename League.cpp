@@ -1,5 +1,6 @@
 #include "League.h"
 #include "PlayedMatch.h"
+#include "ScheduledMatch.h"
 #include <algorithm>
 #include <iostream>
 
@@ -32,6 +33,65 @@ bool League::recordMatchResult(const std::string& home, const std::string& away,
         }
     }
     return false;
+}
+
+bool League::editTeamName(const std::string& oldName, const std::string& newName) {
+    if (oldName == newName) return false;
+    if (findTeam(newName) != nullptr) return false;
+
+    Team* team = findTeam(oldName);
+    if (!team) return false;
+    team->name = newName;
+
+    for (size_t i = 0; i < matches.size(); ++i) {
+        Match* m = matches[i];
+        bool isHome = m->getHome() == oldName;
+        bool isAway = m->getAway() == oldName;
+        if (!isHome && !isAway) continue;
+
+        if (auto* played = dynamic_cast<PlayedMatch*>(m)) {
+            int hg = played->getHomeGoals();
+            int ag = played->getAwayGoals();
+            std::string date = m->getDate();
+            std::string home = isHome ? newName : m->getHome();
+            std::string away = isAway ? newName : m->getAway();
+            delete m;
+            matches[i] = new PlayedMatch(home, away, date, hg, ag);
+        } else {
+            std::string date = m->getDate();
+            std::string home = isHome ? newName : m->getHome();
+            std::string away = isAway ? newName : m->getAway();
+            delete m;
+            matches[i] = new ScheduledMatch(home, away, date);
+        }
+    }
+
+    return true;
+}
+
+bool League::removeTeam(const std::string& name) {
+    bool removed = false;
+    for (size_t i = 0; i < teams.size(); ++i) {
+        if (teams[i].name == name) {
+            teams.erase(teams.begin() + i);
+            removed = true;
+            break;
+        }
+    }
+
+    if (!removed) return false;
+
+    for (size_t i = 0; i < matches.size();) {
+        Match* m = matches[i];
+        if (m->getHome() == name || m->getAway() == name) {
+            delete m;
+            matches.erase(matches.begin() + i);
+        } else {
+            ++i;
+        }
+    }
+
+    return true;
 }
 
 Team* League::findTeam(const std::string& tname) {
