@@ -190,6 +190,21 @@ int main() {
                         case 2: {
                             std::string homeName;
                             std::string awayName;
+                            std::string date;
+                            int goalsHome, goalsAway;
+                            std::cout << "Home name: ";
+                            std::getline(std::cin >> std::ws, homeName);
+                            std::cout << "Away name: ";
+                            std::getline(std::cin >> std::ws, awayName);
+                            std::cout << "Date: ";
+                            std::getline(std::cin >> std::ws, date);
+
+                            std::cout << "Goals home: ";
+                            std::cin >> goalsHome;
+                            std::cout << "Goals away: ";
+                            std::cin >> goalsAway;
+
+                            PlayedMatch match(homeName, awayName, date, goalsHome, goalsAway);
                             break;
                         }
                         case 0:
