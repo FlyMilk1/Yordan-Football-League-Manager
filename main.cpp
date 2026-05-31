@@ -3,6 +3,7 @@
 #include "League.h"
 #include "ScheduledMatch.h"
 #include "PlayedMatch.h"
+#include "FileManagement.h"
 
 int main() {
     League league("Demo League");
@@ -16,7 +17,7 @@ int main() {
 
     bool running = true;
     while (running) {
-        std::cout << "\n1) List matches\n2) Enter result\n3) Edit result\n4) Show standings\n5) Teams\n0) Exit\n> ";
+        std::cout << "\n1) List matches\n2) Enter result\n3) Edit result\n4) Show standings\n5) Teams\n6) Leagues\n0) Exit\n> ";
         int choice = -1;
         if (!(std::cin >> choice)) break;
 
@@ -119,6 +120,44 @@ int main() {
                         }
                         case 0:
                             teamMenu = false;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                break;
+            }
+            case 6: {
+                bool leagueMenu = true;
+                while (leagueMenu) {
+                    std::cout << "\n1) Save league\n2) Load league\n0)\n3) Edit league\nBack\n> ";
+                    int leagueChoice = -1;
+                    if (!(std::cin >> leagueChoice)) { leagueMenu = false; break; }
+
+                    switch (leagueChoice) {
+                        case 1: {
+                            std::string id;
+                            std::cout << "League ID: ";
+                            std::getline(std::cin >> std::ws, id);
+                            writeToFileLeague(id, league);
+                            break;
+                        }
+                        case 2: {
+                            std::string id;
+                            std::cout << "League ID: ";
+                            std::getline(std::cin >> std::ws, id);
+                            League loaded;
+                            readFromFileLeague(id, loaded);
+                            if (!loaded.name.empty()) {
+                                league = loaded;
+                                std::cout << "League loaded.\n";
+                            } else {
+                                std::cout << "Failed to load league.\n";
+                            }
+                            break;
+                        }
+                        case 0:
+                            leagueMenu = false;
                             break;
                         default:
                             break;
