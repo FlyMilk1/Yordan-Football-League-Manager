@@ -6,14 +6,7 @@
 #include "FileManagement.h"
 
 int main() {
-    League league("Demo League");
-    league.addTeam(Team("Alpha"));
-    league.addTeam(Team("Beta"));
-    league.addTeam(Team("Gamma"));
-    league.addTeam(Team("Delta"));
-
-    league.addMatch(new ScheduledMatch("Alpha", "Beta", "2026-05-17"));
-    league.addMatch(new ScheduledMatch("Gamma", "Delta", "2026-05-18"));
+    League league("New League");
 
     bool running = true;
     while (running) {
@@ -130,7 +123,7 @@ int main() {
             case 6: {
                 bool leagueMenu = true;
                 while (leagueMenu) {
-                    std::cout << "\n1) Save league\n2) Load league\n0)\n3) Edit league\nBack\n> ";
+                    std::cout << "\n1) Save league\n2) Load league\n0)\n3) Rename league\nBack\n> ";
                     int leagueChoice = -1;
                     if (!(std::cin >> leagueChoice)) { leagueMenu = false; break; }
 
@@ -154,6 +147,13 @@ int main() {
                             } else {
                                 std::cout << "Failed to load league.\n";
                             }
+                            break;
+                        }
+                        case 3: {
+                            std::string newName;
+                            std::cout << "New name: ";
+                            std::getline(std::cin >> std::ws, newName);
+                            league.name = newName;
                             break;
                         }
                         case 0:
