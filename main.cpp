@@ -11,7 +11,7 @@ int main() {
 
     bool running = true;
     while (running) {
-        std::cout << "\n1) List matches\n2) Enter result\n3) Edit result\n4) Show standings\n5) Teams\n6) Leagues\n7) Add a match\n0) Exit\n> ";
+        std::cout << "\n1) List matches\n2) Enter result\n3) Edit result\n4) Show standings\n5) Teams\n6) Leagues\n7) Add a match\n8) List team matches\n0) Exit\n> ";
         int choice = -1;
         if (!(std::cin >> choice)) break;
 
@@ -214,6 +214,24 @@ int main() {
                         default:
                             break;
                     }
+                }
+                break;
+            }
+            case 8: {
+                std::string teamName;
+                std::cout << "Team name: ";
+                std::getline(std::cin >> std::ws, teamName);
+
+                bool found = false;
+                for (const Match* m : league->matches) {
+                    if (m->getHome() == teamName || m->getAway() == teamName) {
+                        m->print();
+                        found = true;
+                    }
+                }
+
+                if (!found) {
+                    std::cout << "No matches found for team: " << teamName << "\n";
                 }
                 break;
             }
