@@ -3,5 +3,5 @@
 
 #include "League.h"
 
-void writeToFileLeague(const int leagueIdName, const League& league);
-void readFromFileLeague(const int leagueIdName);
+void writeToFileLeague(const std::string leagueIdName, const League& league);
+League readFromFileLeague(const std::string leagueIdName);
