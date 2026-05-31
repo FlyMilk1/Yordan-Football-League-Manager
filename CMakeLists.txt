@@ -14,4 +14,5 @@ add_executable(Yordan_Football_League_Manager main.cpp
         ScheduledMatch.h
         Team.cpp
         Team.h
-        FileManagement.h)
+        FileManagement.h
+        FileManagement.cpp)
