@@ -10,7 +10,7 @@ int main() {
 
     bool running = true;
     while (running) {
-        std::cout << "\n1) List matches\n2) Enter result\n3) Edit result\n4) Show standings\n5) Teams\n6) Leagues\n0) Exit\n> ";
+        std::cout << "\n1) List matches\n2) Enter result\n3) Edit result\n4) Show standings\n5) Teams\n6) Leagues\n7) Add a match\n0) Exit\n> ";
         int choice = -1;
         if (!(std::cin >> choice)) break;
 
@@ -164,6 +164,41 @@ int main() {
                     }
                 }
                 break;
+            }
+            case 7: {
+                bool matchAddMenu = true;
+                while (matchAddMenu) {
+                    int matchType = -1;
+                    std::cout << "1) Add scheduled match\n2) Add played match\n0) Back\n> ";
+                    if (!(std::cin >> matchType)) { matchAddMenu = false; break; }
+                    switch (matchType) {
+                        case 1: {
+                            std::string nameHome;
+                            std::string awayName;
+                            std::string date;
+                            std::cout << "Home name: ";
+                            std::getline(std::cin >> std::ws, nameHome);
+                            std::cout << "Away name: ";
+                            std::getline(std::cin >> std::ws, awayName);
+                            std::cout << "Date: ";
+                            std::getline(std::cin >> std::ws, date);
+
+                            ScheduledMatch match(nameHome, awayName, date);
+                            league.addMatch(new ScheduledMatch(nameHome, awayName, date));
+                            break;
+                        }
+                        case 2: {
+                            std::string homeName;
+                            std::string awayName;
+                            break;
+                        }
+                        case 0:
+                            matchAddMenu = false;
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
             case 0:
                 running = false;
