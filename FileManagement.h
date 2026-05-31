@@ -1,7 +1,14 @@
 #pragma once
 #include <string>
-
 #include "League.h"
 
-void writeToFileLeague(const std::string leagueIdName, const League& league);
-void readFromFileLeague(const std::string leagueIdName, League& league);
+class FileManagement {
+public:
+	FileManagement();
+	void writeToFileLeague(const std::string& leagueIdName, const League& league) const;
+	bool loadLeague(const std::string& leagueIdName);
+	League* getLoadedLeague();
+
+private:
+	League loaded;
+};

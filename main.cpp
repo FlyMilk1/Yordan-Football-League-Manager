@@ -6,7 +6,8 @@
 #include "FileManagement.h"
 
 int main() {
-    League league("New League");
+    FileManagement fm;
+    League* league = fm.getLoadedLeague();
 
     bool running = true;
     while (running) {
@@ -16,7 +17,7 @@ int main() {
 
         switch (choice) {
             case 1: {
-                for (Match* m : league.matches) m->print();
+                for (Match* m : league->matches) m->print();
                 break;
             }
             case 2: {
@@ -37,7 +38,7 @@ int main() {
                 std::cout << "Away goals: ";
                 std::cin >> awayGoals;
 
-                bool recorded = league.recordMatchResult(home, away, date, homeGoals, awayGoals);
+                bool recorded = league->recordMatchResult(home, away, date, homeGoals, awayGoals);
                 if (recorded) {
                     std::cout << "Result recorded.\n";
                 } else {
@@ -63,7 +64,7 @@ int main() {
                 std::cout << "New away goals: ";
                 std::cin >> awayGoals;
 
-                bool edited = league.editMatchResult(home, away, date, homeGoals, awayGoals);
+                bool edited = league->editMatchResult(home, away, date, homeGoals, awayGoals);
                 if (edited) {
                     std::cout << "Result updated.\n";
                 } else {
@@ -72,8 +73,8 @@ int main() {
                 break;
             }
             case 4: {
-                league.calculateStandings();
-                league.printStandings();
+                league->calculateStandings();
+                league->printStandings();
                 break;
             }
             case 5: {
@@ -85,13 +86,13 @@ int main() {
 
                     switch (teamChoice) {
                         case 1:
-                            for (const auto& t : league.teams) std::cout << t.name << "\n";
+                            for (const auto& t : league->teams) std::cout << t.name << "\n";
                             break;
                         case 2: {
                             std::string name;
                             std::cout << "Team name: ";
                             std::getline(std::cin >> std::ws, name);
-                            league.addTeam(Team(name));
+                            league->addTeam(Team(name));
                             break;
                         }
                         case 3: {
@@ -101,7 +102,7 @@ int main() {
                             std::getline(std::cin >> std::ws, oldName);
                             std::cout << "New name: ";
                             std::getline(std::cin >> std::ws, newName);
-                            bool ok = league.editTeamName(oldName, newName);
+                            bool ok = league->editTeamName(oldName, newName);
                             std::cout << (ok ? "Updated.\n" : "Update failed.\n");
                             break;
                         }
@@ -109,7 +110,7 @@ int main() {
                             std::string name;
                             std::cout << "Team name: ";
                             std::getline(std::cin >> std::ws, name);
-                            bool ok = league.removeTeam(name);
+                            bool ok = league->removeTeam(name);
                             std::cout << (ok ? "Removed.\n" : "Remove failed.\n");
                             break;
                         }
@@ -134,17 +135,15 @@ int main() {
                             std::string id;
                             std::cout << "League ID: ";
                             std::getline(std::cin >> std::ws, id);
-                            writeToFileLeague(id, league);
+                            fm.writeToFileLeague(id, *league);
                             break;
                         }
                         case 2: {
                             std::string id;
                             std::cout << "League ID: ";
                             std::getline(std::cin >> std::ws, id);
-                            League loaded;
-                            readFromFileLeague(id, loaded);
-                            if (!loaded.name.empty()) {
-                                league = loaded;
+                            if (fm.loadLeague(id)) {
+                                league = fm.getLoadedLeague();
                                 std::cout << "League loaded.\n";
                             } else {
                                 std::cout << "Failed to load league.\n";
@@ -155,7 +154,7 @@ int main() {
                             std::string newName;
                             std::cout << "New name: ";
                             std::getline(std::cin >> std::ws, newName);
-                            league.name = newName;
+                            league->name = newName;
                             break;
                         }
                         case 0:
@@ -186,7 +185,7 @@ int main() {
                             std::getline(std::cin >> std::ws, date);
 
                             ScheduledMatch match(nameHome, awayName, date);
-                            league.addMatch(new ScheduledMatch(nameHome, awayName, date));
+                            league->addMatch(new ScheduledMatch(nameHome, awayName, date));
                             break;
                         }
                         case 2: {
@@ -206,7 +205,7 @@ int main() {
                             std::cout << "Goals away: ";
                             std::cin >> goalsAway;
 
-                            league.addMatch(new PlayedMatch(homeName, awayName, date, goalsHome, goalsAway));
+                            league->addMatch(new PlayedMatch(homeName, awayName, date, goalsHome, goalsAway));
                             break;
                         }
                         case 0:

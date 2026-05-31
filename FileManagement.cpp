@@ -1,11 +1,12 @@
 #include "FileManagement.h"
 #include "PlayedMatch.h"
+#include "ScheduledMatch.h"
 #include <fstream>
 #include <iostream>
 
-#include "ScheduledMatch.h"
+FileManagement::FileManagement() : loaded("New League") {}
 
-void writeToFileLeague(const std::string leagueIdName, const League& league) {
+void FileManagement::writeToFileLeague(const std::string& leagueIdName, const League& league) const {
     std::ofstream outFile("league_" + leagueIdName + ".txt");
     if (!outFile) {
         std::cerr << "Error opening file for writing.\n";
@@ -30,14 +31,19 @@ void writeToFileLeague(const std::string leagueIdName, const League& league) {
     }
 }
 
-void readFromFileLeague(const std::string leagueIdName, League& league) {
+bool FileManagement::loadLeague(const std::string& leagueIdName) {
     std::ifstream inFile("league_" + leagueIdName + ".txt");
     if (!inFile) {
         std::cerr << "Error opening file for reading.\n";
-        return;
+        return false;
     }
 
-    std::getline(inFile, league.name);
+    // clear any existing loaded data (delete owned matches)
+    for (Match* m : loaded.matches) delete m;
+    loaded.matches.clear();
+    loaded.teams.clear();
+
+    std::getline(inFile, loaded.name);
     int numTeams;
     inFile >> numTeams;
     inFile.ignore();
@@ -45,7 +51,7 @@ void readFromFileLeague(const std::string leagueIdName, League& league) {
     for (int i = 0; i < numTeams; ++i) {
         Team t;
         inFile >> t.name >> t.points >> t.goalsScored >> t.goalsAgainst;
-        league.teams.push_back(t);
+        loaded.teams.push_back(t);
     }
 
     int numMatches;
@@ -62,13 +68,17 @@ void readFromFileLeague(const std::string leagueIdName, League& league) {
             int homeGoals;
             int awayGoals;
             inFile >> home >> away >> date >> homeGoals >> awayGoals;
-            league.matches.push_back(new PlayedMatch(home, away, date, homeGoals, awayGoals));
+            loaded.matches.push_back(new PlayedMatch(home, away, date, homeGoals, awayGoals));
         } else {
             std::string home;
             std::string away;
             std::string date;
             inFile >> home >> away >> date;
-            league.matches.push_back(new ScheduledMatch(home, away, date));
+            loaded.matches.push_back(new ScheduledMatch(home, away, date));
         }
     }
+    return true;
 }
+
+League* FileManagement::getLoadedLeague() { return &loaded; }
+
