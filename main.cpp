@@ -15,9 +15,10 @@ int main() {
         if (!(std::cin >> choice)) break;
 
         switch (choice) {
-            case 1:
+            case 1: {
                 for (Match* m : league.matches) m->print();
                 break;
+            }
             case 2: {
                 std::string home;
                 std::string away;
@@ -70,10 +71,11 @@ int main() {
                 }
                 break;
             }
-            case 4:
+            case 4: {
                 league.calculateStandings();
                 league.printStandings();
                 break;
+            }
             case 5: {
                 bool teamMenu = true;
                 while (teamMenu) {
@@ -123,7 +125,7 @@ int main() {
             case 6: {
                 bool leagueMenu = true;
                 while (leagueMenu) {
-                    std::cout << "\n1) Save league\n2) Load league\n0)\n3) Rename league\nBack\n> ";
+                    std::cout << "\n1) Save league\n2) Load league\n3) Rename league\n0) Back\n> ";
                     int leagueChoice = -1;
                     if (!(std::cin >> leagueChoice)) { leagueMenu = false; break; }
 
@@ -168,7 +170,7 @@ int main() {
             case 7: {
                 bool matchAddMenu = true;
                 while (matchAddMenu) {
-                    int matchType = -1;
+                    int matchType = 0;
                     std::cout << "1) Add scheduled match\n2) Add played match\n0) Back\n> ";
                     if (!(std::cin >> matchType)) { matchAddMenu = false; break; }
                     switch (matchType) {
@@ -204,7 +206,7 @@ int main() {
                             std::cout << "Goals away: ";
                             std::cin >> goalsAway;
 
-                            PlayedMatch match(homeName, awayName, date, goalsHome, goalsAway);
+                            league.addMatch(new PlayedMatch(homeName, awayName, date, goalsHome, goalsAway));
                             break;
                         }
                         case 0:
@@ -214,6 +216,7 @@ int main() {
                             break;
                     }
                 }
+                break;
             }
             case 0:
                 running = false;

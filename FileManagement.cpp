@@ -62,15 +62,13 @@ void readFromFileLeague(const std::string leagueIdName, League& league) {
             int homeGoals;
             int awayGoals;
             inFile >> home >> away >> date >> homeGoals >> awayGoals;
-            PlayedMatch* pm = new PlayedMatch(home, away, date, homeGoals, awayGoals);
-            league.matches.push_back(pm);
+            league.matches.push_back(new PlayedMatch(home, away, date, homeGoals, awayGoals));
         } else {
             std::string home;
             std::string away;
             std::string date;
             inFile >> home >> away >> date;
-            ScheduledMatch* sm = new ScheduledMatch(home, away, date);
-            league.matches.push_back(sm);
+            league.matches.push_back(new ScheduledMatch(home, away, date));
         }
     }
 }
